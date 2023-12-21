@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:theapp/pages/registration.dart';
+import 'package:theapp/pages/sign_in.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -18,7 +19,7 @@ void main() {
             ),
           ),
         )),
-    home: const RegistrationPage(),
+    home: const SigninPage(),
     debugShowCheckedModeBanner: false,
   ));
 }
