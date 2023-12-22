@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:theapp/widgets/my_text_form_field.dart';
+import 'package:theapp/pages/terms_and_condition.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});
@@ -100,7 +101,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               ),
                             ),
                             InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    fullscreenDialog: true,
+                                    builder: (context) =>
+                                        const TermsAndCondition(),
+                                  ),
+                                );
+                              },
                               child: Text(
                                 "Terms And Condition",
                                 style: TextStyle(

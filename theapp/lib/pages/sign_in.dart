@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:theapp/widgets/my_text_form_field.dart';
+import 'package:theapp/pages/forgotPassword/forgot_password_page1.dart';
+import 'package:theapp/pages/registration.dart';
 
 class SigninPage extends StatefulWidget {
   const SigninPage({super.key});
@@ -52,7 +54,15 @@ class _RegistrationPageState extends State<SigninPage> {
                       height: 10,
                     ),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            fullscreenDialog: true,
+                            builder: (context) => const ForgotPassWord1(),
+                          ),
+                        );
+                      },
                       child: Text(
                         "Forgot password?",
                         style: TextStyle(
@@ -91,7 +101,15 @@ class _RegistrationPageState extends State<SigninPage> {
                     ),
                   ),
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          fullscreenDialog: true,
+                          builder: (context) => const RegistrationPage(),
+                        ),
+                      );
+                    },
                     child: Text(
                       "Register",
                       style: TextStyle(
