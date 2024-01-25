@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "821467811510",
+    "project_id": "dana-maintenance",
+    "storage_bucket": "dana-maintenance.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:821467811510:android:e8bcf7a14bb42c85a9a017",
+        "android_client_info": {
+          "package_name": "com.example.theapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAN0eGM_hMNjIiCnu-nXRvTUdb_dob2VTg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

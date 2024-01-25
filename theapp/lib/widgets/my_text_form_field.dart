@@ -6,10 +6,20 @@ class MyTextFormField extends StatefulWidget {
     required this.theLabel,
     this.isPassWord = false,
     this.isPhone = false,
+    required this.onSubmit,
+    this.emptyMessage,
+    this.validator,
+    this.textInputType,
+    this.onChanged,
   });
   final String theLabel;
   final bool isPassWord;
   final bool isPhone;
+  final ValueChanged<String> onSubmit;
+  final String? emptyMessage;
+  final String? Function(String?)? validator;
+  final TextInputType? textInputType;
+  final void Function(String)? onChanged;
 
   @override
   State<MyTextFormField> createState() => _MyTextFormFieldState();
@@ -26,8 +36,16 @@ class _MyTextFormFieldState extends State<MyTextFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      keyboardType: widget.textInputType,
       obscureText: isob,
       decoration: InputDecoration(
+        errorStyle: const TextStyle(color: Color.fromARGB(255, 235, 179, 176)),
+        errorBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: Color.fromARGB(255, 247, 210, 208),
+            width: 2,
+          ),
+        ),
         suffixIcon: widget.isPassWord
             ? IconButton(
                 onPressed: () {
@@ -57,6 +75,19 @@ class _MyTextFormFieldState extends State<MyTextFormField> {
         ),
       ),
       style: TextStyle(color: Theme.of(context).primaryColor),
+      validator: widget.validator ??
+          (value) {
+            if (value == null || value.isEmpty) {
+              return widget.emptyMessage ?? "This Field is Required";
+            }
+            return null;
+          },
+      onSaved: (newValue) {
+        if (newValue != null) {
+          widget.onSubmit(newValue);
+        }
+      },
+      onChanged: widget.onChanged,
     );
   }
 }

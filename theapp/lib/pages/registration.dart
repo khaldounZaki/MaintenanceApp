@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:theapp/widgets/my_text_form_field.dart';
 import 'package:theapp/pages/terms_and_condition.dart';
+import 'package:provider/provider.dart';
+import 'package:theapp/services/auth_services.dart';
+import 'package:theapp/models/user.dart';
+import 'package:theapp/services/other_services.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});
@@ -10,9 +14,27 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
+  final _formKey = GlobalKey<FormState>();
+  AutovalidateMode _autoValidate = AutovalidateMode.disabled;
+  bool _inprogress = false;
   bool acceptTerms = false;
+  AppUser appUser = AppUser(
+      companyName: "companyName",
+      email: "email",
+      password: "password",
+      phone: "phone",
+      role: "role");
+  String passwordConf = "password";
+  String password = "password";
+
   @override
   Widget build(BuildContext context) {
+    //final auth = Provider.of<AuthenticationService>(context);
+    // Company Name
+    // Phone Number
+    // Email
+    // Password
+    // Password Confirmation
     return Scaffold(
       //resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
@@ -31,12 +53,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 child: Container(),
               ),
               Form(
+                key: _formKey,
+                autovalidateMode: _autoValidate,
                 child: Column(
                   children: [
                     SizedBox(
                       width: (MediaQuery.of(context).size.width / 4) * 3,
-                      child: const MyTextFormField(
+                      child: MyTextFormField(
                         theLabel: "Company Name",
+                        onSubmit: (value) {
+                          appUser.companyName = value;
+                        },
                       ),
                     ),
                     const SizedBox(
@@ -44,9 +71,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                     SizedBox(
                       width: (MediaQuery.of(context).size.width / 4) * 3,
-                      child: const MyTextFormField(
+                      child: MyTextFormField(
                         theLabel: "Phone Number",
                         isPhone: true,
+                        onSubmit: (value) {
+                          appUser.phone = value;
+                        },
+                        validator: phoneNumberValidator,
+                        textInputType: TextInputType.number,
                       ),
                     ),
                     const SizedBox(
@@ -54,8 +86,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                     SizedBox(
                       width: (MediaQuery.of(context).size.width / 4) * 3,
-                      child: const MyTextFormField(
+                      child: MyTextFormField(
                         theLabel: "Email",
+                        onSubmit: (value) {
+                          appUser.email = value;
+                        },
+                        validator: emailValidator,
                       ),
                     ),
                     const SizedBox(
@@ -63,9 +99,27 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                     SizedBox(
                       width: (MediaQuery.of(context).size.width / 100) * 75,
-                      child: const MyTextFormField(
+                      child: MyTextFormField(
                         theLabel: "Password",
                         isPassWord: true,
+                        onChanged: (value) {
+                          password = value;
+                        },
+                        onSubmit: (value) {
+                          appUser.password = value;
+                        },
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Password is Required";
+                          }
+                          if (value.length < 6) {
+                            return "At Least 6 Characters Required.";
+                          }
+                          if (password != passwordConf) {
+                            return "Passwords do not match";
+                          }
+                          return null;
+                        },
                       ),
                     ),
                     const SizedBox(
@@ -73,9 +127,21 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                     SizedBox(
                       width: (MediaQuery.of(context).size.width / 100) * 75,
-                      child: const MyTextFormField(
+                      child: MyTextFormField(
                         theLabel: "Password Confirmation",
                         isPassWord: true,
+                        onSubmit: (value) {
+                          passwordConf = value;
+                        },
+                        validator: (value) {
+                          if (password != passwordConf) {
+                            return "Passwords do not match";
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          passwordConf = value;
+                        },
                       ),
                     ),
                     const SizedBox(
@@ -129,11 +195,40 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       width: 200,
                       height: 50,
                       child: ElevatedButton(
-                        onPressed: () {},
-                        child: const Text(
-                          "Register",
-                          style: TextStyle(fontSize: 18),
-                        ),
+                        onPressed: () {
+                          setState(() {
+                            _inprogress = true;
+                          });
+                          if (_formKey.currentState!.validate()) {
+                            _formKey.currentState?.save();
+                            // bool readyForRegisteration = true;
+                            // String errorMessage = "";
+
+                            // if (!validateEmail(appUser.email)) {
+                            //   readyForRegisteration = false;
+                            //   errorMessage =
+                            //       "$errorMessage\n- Email Adress is not a valid.";
+                            // }
+                            // showErrorMessage(context, errorMessage);
+
+                            setState(() {
+                              _inprogress = false;
+                            });
+                            //print(appUser.toString());
+                          } else {
+                            setState(() {
+                              _inprogress = false;
+                              _autoValidate =
+                                  AutovalidateMode.onUserInteraction;
+                            });
+                          }
+                        },
+                        child: _inprogress
+                            ? const Center(child: CircularProgressIndicator())
+                            : const Text(
+                                "Register",
+                                style: TextStyle(fontSize: 18),
+                              ),
                       ),
                     )
                   ],

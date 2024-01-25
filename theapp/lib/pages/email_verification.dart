@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:theapp/widgets/my_text_form_field.dart';
-import 'package:theapp/pages/sign_in.dart';
+import 'package:flutter_verification_code/flutter_verification_code.dart';
 
-/// this page request the new password from the user
-/// update it in the firebase
-/// set password forgotten flag to false
-/// set email verfied flag to true
-/// forword the user to sign in page
+/// This page should request the verfication code that has been send to the user
+/// if he entered it correctly proceed to reset password page
 
-class PasswordReset extends StatelessWidget {
-  const PasswordReset({super.key});
+class VerificationEmail extends StatelessWidget {
+  const VerificationEmail({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,36 +31,20 @@ class PasswordReset extends StatelessWidget {
                 padding: const EdgeInsets.only(
                     top: 25, left: 9, right: 8, bottom: 8),
                 child: Text(
-                  "Please enter the New Password",
+                  "Please enter the Verification Code sent to your email",
                   style: TextStyle(
                     color: Theme.of(context).primaryColor,
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 10,
-              ),
-              SizedBox(
-                width: (MediaQuery.of(context).size.width / 100) * 75,
-                child: MyTextFormField(
-                  theLabel: "New Password",
-                  isPassWord: true,
-                  onSubmit: (value) {},
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              SizedBox(
-                width: (MediaQuery.of(context).size.width / 100) * 75,
-                child: MyTextFormField(
-                  theLabel: "Password Confirmation",
-                  isPassWord: true,
-                  onSubmit: (value) {},
-                ),
-              ),
-              const SizedBox(
-                height: 10,
+              VerificationCode(
+                onCompleted: (value) {},
+                onEditing: (value) {},
+                //fillColor: Theme.of(context).primaryColor,
+                textStyle: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22),
               ),
               Flexible(
                 flex: 2,
@@ -74,15 +54,23 @@ class PasswordReset extends StatelessWidget {
                 width: 200,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {
-                    for (int i = 0; i < 3; i++) {
-                      Navigator.pop(context);
-                    }
-                  },
+                  onPressed: () {},
                   child: const Text(
-                    "Update",
+                    "Verify",
                     style: TextStyle(fontSize: 18),
                   ),
+                ),
+              ),
+              const SizedBox(
+                height: 50,
+              ),
+              InkWell(
+                onTap: () {},
+                child: Text(
+                  "Resend New Code",
+                  style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      decoration: TextDecoration.underline),
                 ),
               ),
               Flexible(

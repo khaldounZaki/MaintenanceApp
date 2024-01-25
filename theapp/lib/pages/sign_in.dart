@@ -2,18 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:theapp/widgets/my_text_form_field.dart';
 import 'package:theapp/pages/forgotPassword/forgot_password_page1.dart';
 import 'package:theapp/pages/registration.dart';
+import 'package:provider/provider.dart';
+import 'package:theapp/services/auth_services.dart';
+import 'package:theapp/services/other_services.dart';
 
 class SigninPage extends StatefulWidget {
   const SigninPage({super.key});
 
   @override
-  State<SigninPage> createState() => _RegistrationPageState();
+  State<SigninPage> createState() => _SigninPageState();
 }
 
-class _RegistrationPageState extends State<SigninPage> {
-  bool acceptTerms = false;
+class _SigninPageState extends State<SigninPage> {
+  final _formKey = GlobalKey<FormState>();
+  AutovalidateMode _autoValidate = AutovalidateMode.disabled;
+  bool _inprogress = false;
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthenticationService>(context);
+    late String email;
+    late String password;
+
     return Scaffold(
       //resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
@@ -32,12 +41,18 @@ class _RegistrationPageState extends State<SigninPage> {
                 child: Container(),
               ),
               Form(
+                key: _formKey,
+                autovalidateMode: _autoValidate,
                 child: Column(
                   children: [
                     SizedBox(
                       width: (MediaQuery.of(context).size.width / 4) * 3,
-                      child: const MyTextFormField(
+                      child: MyTextFormField(
                         theLabel: "Email",
+                        onSubmit: (value) {
+                          email = value;
+                          print(email);
+                        },
                       ),
                     ),
                     const SizedBox(
@@ -45,13 +60,17 @@ class _RegistrationPageState extends State<SigninPage> {
                     ),
                     SizedBox(
                       width: (MediaQuery.of(context).size.width / 100) * 75,
-                      child: const MyTextFormField(
+                      child: MyTextFormField(
                         theLabel: "Password",
                         isPassWord: true,
+                        onSubmit: (value) {
+                          password = value;
+                          print(password);
+                        },
                       ),
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: 20,
                     ),
                     InkWell(
                       onTap: () {
@@ -77,11 +96,45 @@ class _RegistrationPageState extends State<SigninPage> {
                       width: 200,
                       height: 50,
                       child: ElevatedButton(
-                        onPressed: () {},
-                        child: const Text(
-                          "Sign In",
-                          style: TextStyle(fontSize: 18),
-                        ),
+                        onPressed: () async {
+                          setState(() {
+                            _inprogress = true;
+                          });
+                          if (_formKey.currentState!.validate()) {
+                            _formKey.currentState?.save();
+
+                            try {
+                              await auth.signIn(email, password);
+                            } catch (e) {
+                              if (!context.mounted) return;
+                              // ScaffoldMessenger.of(context).showSnackBar(
+                              //   const SnackBar(
+                              //       content: Text(
+                              //     "The email address or password is not correct. ",
+                              //   )),
+                              // );
+                              showErrorMessage(context,
+                                  "The email address or password is not correct.");
+                              setState(() {
+                                _inprogress = false;
+                              });
+                            }
+                          } else {
+                            setState(() {
+                              _inprogress = false;
+                              _autoValidate =
+                                  AutovalidateMode.onUserInteraction;
+                            });
+                          }
+
+                          //auth.signIn();
+                        },
+                        child: _inprogress
+                            ? const Center(child: CircularProgressIndicator())
+                            : const Text(
+                                "Sign In",
+                                style: TextStyle(fontSize: 18),
+                              ),
                       ),
                     )
                   ],

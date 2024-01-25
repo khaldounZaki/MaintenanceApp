@@ -59,8 +59,9 @@ class _RegistrationPageState extends State<ForgotPassWord1> {
                     ),
                     SizedBox(
                       width: (MediaQuery.of(context).size.width / 4) * 3,
-                      child: const MyTextFormField(
+                      child: MyTextFormField(
                         theLabel: "Email",
+                        onSubmit: (value) {},
                       ),
                     ),
                     const SizedBox(
